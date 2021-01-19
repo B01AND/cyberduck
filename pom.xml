@@ -51,6 +51,7 @@
         <module>nextcloud</module>
         <module>owncloud</module>
         <module>manta</module>
+        <module>box</module>
         <module>ctera</module>
         <module>protocols</module>
         <module>protocols/dll</module>
