@@ -302,7 +302,8 @@ public interface Protocol extends Comparable<Protocol>, Serializable {
         manta,
         gmxcloud,
         freenet,
-        ctera
+        ctera,
+        box
     }
 
     enum Case {
