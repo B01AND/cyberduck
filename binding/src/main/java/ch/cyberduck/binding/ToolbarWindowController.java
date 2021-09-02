@@ -88,7 +88,7 @@ public abstract class ToolbarWindowController extends WindowController implement
     @Override
     public void awakeFromNib() {
         // Reset
-        NSEnumerator items = this.tabView.tabViewItems().objectEnumerator();
+        NSEnumerator items = tabView.tabViewItems().objectEnumerator();
         NSObject object;
         while((object = items.nextObject()) != null) {
             this.tabView.removeTabViewItem(Rococoa.cast(object, NSTabViewItem.class));
@@ -98,7 +98,7 @@ public abstract class ToolbarWindowController extends WindowController implement
             final NSTabViewItem item = NSTabViewItem.itemWithIdentifier(tab.getKey().identifier);
             item.setView(tab.getValue());
             item.setLabel(tab.getKey().label);
-            this.tabView.addTabViewItem(item);
+            tabView.addTabViewItem(item);
         }
         // Set up toolbar properties: Allow customization, give a default display mode, and remember state in user defaults
         toolbar.setAllowsUserCustomization(false);
@@ -111,6 +111,10 @@ public abstract class ToolbarWindowController extends WindowController implement
         this.setSelectedPanel(index < this.getPanels().size() ? index : 0);
         this.setTitle(this.getTitle(tabView.selectedTabViewItem()));
         super.awakeFromNib();
+    }
+
+    public void setSelectedPanel(final String identifier) {
+        this.setSelectedPanel(tabView.indexOfTabViewItemWithIdentifier(identifier));
     }
 
     /**
