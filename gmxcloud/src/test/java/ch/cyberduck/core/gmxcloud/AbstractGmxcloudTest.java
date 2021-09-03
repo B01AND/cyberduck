@@ -24,6 +24,7 @@ import ch.cyberduck.core.LoginConnectionService;
 import ch.cyberduck.core.LoginOptions;
 import ch.cyberduck.core.Profile;
 import ch.cyberduck.core.ProtocolFactory;
+import ch.cyberduck.core.Scheme;
 import ch.cyberduck.core.serializer.impl.dd.ProfilePlistReader;
 import ch.cyberduck.core.ssl.DefaultX509KeyManager;
 import ch.cyberduck.core.ssl.DisabledX509TrustManager;
@@ -61,7 +62,30 @@ public class AbstractGmxcloudTest {
                 fail(reason);
                 return null;
             }
-        }, new DisabledHostKeyCallback(), new DisabledPasswordStore(), new DisabledProgressListener());
+        }, new DisabledHostKeyCallback(), new TestPasswordStore(), new DisabledProgressListener());
         login.check(session, new DisabledCancelCallback());
+    }
+
+    public static class TestPasswordStore extends DisabledPasswordStore {
+        @Override
+        public String getPassword(Scheme scheme, int port, String hostname, String user) {
+            if(user.equals("GMX Cloud (iterate@gmx.de) OAuth2 Access Token")) {
+                return System.getProperties().getProperty("gmxcloud.accesstoken");
+            }
+            if(user.equals("GMX Cloud (iterate@gmx.de) OAuth2 Refresh Token")) {
+                return System.getProperties().getProperty("gmxcloud.refreshtoken");
+            }
+            return null;
+        }
+
+        @Override
+        public void addPassword(final Scheme scheme, final int port, final String hostname, final String user, final String password) {
+            if(user.equals("GMX Cloud (iterate@gmx.de) OAuth2 Access Token")) {
+                System.getProperties().setProperty("gmxcloud.accesstoken", password);
+            }
+            if(user.equals("GMX Cloud (iterate@gmx.de) OAuth2 Refresh Token")) {
+                System.getProperties().setProperty("gmxcloud.refreshtoken", password);
+            }
+        }
     }
 }
